@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        ul{list-style: none}
+        ul li{font-size: 14px;border-bottom: 1px solid #dedede}
+    </style>
+</head>
+<body>
+<button id="m">m</button>
+<input id="file" type="file"><br>
+<input id="sxph" type="button" value="排序"><br>
+<input id="se" type="text"><br>
+
+<div>
+    <ul id="list" n-for="data">
+        <li data-s="{{price}}">
+            <p>{{price}}{{yuu}}{{title===1?'是1':'不是1'}}-{{title*10}}{{content}}</p>
+        </li>
+    </ul>
+</div>
+<div>
+    <input type="file" id="baseFile">
+</div>
+<img src="" id="baseImg" alt="">
+</body>
+<script src="js/jq.js"></script>
+<script src="js/exif.js"></script>
+<script src="js/index.js"></script>
+<script>
+    $('#file').on('change', function () {
+        let file = document.getElementById('file')
+        $s.upFile({
+            api: 'xx',
+            file: file
+        }, (data) => {
+            console.log(data)
+            $s.message({
+                text: '上传回调消息',
+                position: 'top',
+                time: 1200
+            })
+        })
+    })
+    $('#m').on('click', function () {
+        $s.message({
+            text: '你好-----------------',
+            position: 'center',
+            time: 1200
+        })
+    })
+    console.log($s.arrayPosition('q', 'qouuqegwoeqowebqweqwhu'))
+    let data = [{
+            price: 100,
+            title: 1,
+            content: '游泳'
+        },
+        {
+            price: 200,
+            title: 8,
+            content: '唱歌'
+        },
+        {
+            price: 188,
+            title: 8,
+            content: '跳舞'
+        },
+        {
+            price: 10,
+            title: 8,
+            content: '健身'
+        }
+    ]
+
+    $s.tmpToHtml('#list')
+
+    let sort = 'up'
+    $('#sxph').on('click', function () {
+        if (sort === 'up') {
+            $s.elSort({
+                sort: sort,
+                element: "#list",
+                sortData: 'data-s',
+                success: function (d) {
+                    $('#list').html('')
+                    for (let i = 0; i < d.length; i++) {
+                        $('#list').append(d[i])
+                    }
+                    sort = 'down'
+                }
+            })
+        } else {
+            $s.elSort({
+                sort: sort,
+                element: "#list",
+                sortData: 'data-s',
+                success: function (d) {
+                    $('#list').html('')
+                    for (let i = 0; i < d.length; i++) {
+                        $('#list').append(d[i])
+                    }
+                    sort = 'up'
+                }
+            })
+        }
+
+    })
+
+    $('#baseFile').on('change',function () {
+      let files = document.getElementById('baseFile').files
+      $s.upload({
+        file: files,
+        format: 'jpeg',//jpeg,png  //png格式大小约是jpeg的十几倍(自测某些图片大小差能达到29倍)，请慎用
+        maxWidth: 1080,
+        compress: 0.7,//0~1
+        complete: (d) => {
+          console.log(d)
+          $('#baseImg').attr('src', d)
+        }
+      })
+    })
+</script>
+</html>
