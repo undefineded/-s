@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script src="js/jq.js"></script>
+<script>
+    let a = '[{a:你,b:我,b:我},{a:你2,b:我1,b:我1}]'
+    // a = a.replace(/[/\[\]]/g,'')
+    // console.log(a)
+    let b = []
+    let o = []
+    for(let i= 0;i<a.split(',').length;i++){
+      let c = a.split(',')[i].split(':')[1]
+      let d = "'"+c.replace(/[{}]/g,'')+"'"
+      b.push(a.split(',')[i].split(':')[0].replace(/[{}]/g,'')+':'+d)
+    }
+    // console.log(b)
+    let getKey = /\{(.+?)\}/g;
+    let q = a.match(getKey)
+    console.log(q)
+    for(let k = 0;k<q.length;k++){
+      let y = q[k].replace(/[\{\}]/g,'')
+      console.log(y)
+      let u = y.split(',')
+      let t = ''
+      t = u[0]+"'"+u[1]+"'"
+      console.log(t)
+    }
+</script>
+</html>

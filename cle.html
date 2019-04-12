@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .clear:after {
+            content: "";
+            display: block;
+            height: 0;
+            visibility: hidden;
+            clear: both;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .top {
+            width: 100%;
+            max-width: 500px
+        }
+
+        .cac {
+            width: 100%;
+            max-width: 500px
+        }
+
+        .top li {
+            float: left;
+            width: 14.28%;
+            text-align: center;
+        }
+
+        .cac li {
+            float: left;
+            width: 14.28%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<span>
+   <input type="text" onclick="$sDate(this,event)">
+</span>
+
+<div class="cacBox">
+    <div>
+        <span class="yearBefore"><</span>
+        <span class="year">2018</span>
+        <span class="yearAfter">></span>
+        <span class="monthBefore"><</span>
+        <span class="month">01</span>
+        <span class="monthAfter">></span>
+    </div>
+    <div id="c">
+        <ul class="top clear">
+            <li>7</li>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+        </ul>
+    </div>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+  function $sDate(d,event) {
+    console.log(d,event)
+  }
+
+  $('.yearBefore').click(function () {
+    $('.year').text(Number($('.year').text()) - 1)
+    f($('.year').text() + '/' + $('.month').text())
+  })
+  $('.yearAfter').click(function () {
+    $('.year').text(Number($('.year').text()) + 1)
+    f($('.year').text() + '/' + $('.month').text())
+  })
+  $('.monthBefore').click(function () {
+    if (Number($('.month').text()) <= 1) {
+      $('.month').text('12')
+    } else {
+      if (Number($('.month').text()) - 1 < 10) {
+        $('.month').text('0' + (Number($('.month').text()) - 1))
+      } else {
+        $('.month').text(Number($('.month').text()) - 1)
+      }
+    }
+    f($('.year').text() + '/' + $('.month').text())
+  })
+  $('.monthAfter').click(function () {
+    if (Number($('.month').text()) >= 12) {
+      $('.month').text('01')
+    } else {
+      if (Number($('.month').text()) + 1 < 10) {
+        $('.month').text('0' + (Number($('.month').text()) + 1))
+      } else {
+        $('.month').text(Number($('.month').text()) + 1)
+      }
+    }
+    f($('.year').text() + '/' + $('.month').text())
+  })
+
+  function fuckIeBrower() {
+    let browser = navigator.appName
+    let b_version = navigator.appVersion
+    let version = b_version.split(";");
+    let trim_Version = version[1].replace(/[ ]/g, "");
+    if (browser === "Microsoft Internet Explorer" && trim_Version === "MSIE6.0") {
+      return ("6");
+    } else if (browser === "Microsoft Internet Explorer" && trim_Version === "MSIE7.0") {
+      return ("7");
+    } else if (browser === "Microsoft Internet Explorer" && trim_Version === "MSIE8.0") {
+      return ("8");
+    } else if (browser === "Microsoft Internet Explorer" && trim_Version === "MSIE9.0") {
+      return ("9");
+    }
+  }
+
+  function howGetTime(d) {
+    if (fuckIeBrower() === '8' || fuckIeBrower() === '7' || fuckIeBrower() === '6') {
+      Array.prototype.indexOf = function (elt) {
+        let len = this.length >>> 0;
+        let from = Number(arguments[1]) || 0;
+        from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+        if (from < 0) from += len;
+        for (; from < len; from++) {
+          if (from in this && this[from] === elt) return from;
+        }
+        return -1;
+      };
+      let str = d + '/01'
+      let d = str.split("/");
+      let date = new Date();
+      date.setUTCFullYear(d[0], (Number(d[1]) - 1), d[2]);
+      return date;
+    } else {
+      return new Date(d + '-01')
+    }
+  }
+
+  f($('.year').text() + '/' + $('.month').text())
+
+  function f(d) {
+    let data = howGetTime(d)
+    $('.cac').remove()
+    let dayNum = 0
+    let fullMonth = [1, 3, 5, 7, 8, 10, 12]
+    if (fullMonth.indexOf((data.getMonth() + 1)) !== -1) {
+      dayNum = 31
+    } else if ((data.getMonth() + 1) !== 2) {
+      dayNum = 30
+    } else {
+      let timeDataYear = Number($('.year').text())
+      if ((timeDataYear % 4 === 0) && (timeDataYear % 100 !== 0 || timeDataYear % 400 === 0)) {
+        dayNum = 29
+      } else {
+        dayNum = 28
+      }
+    }
+    let intNum = function () {
+      if ((dayNum / 7).toString().indexOf('.') !== -1) {
+        return Number((dayNum / 7).toString().split('.')[0])
+      }
+      return (dayNum / 7)
+    }
+    let floatNum = data.getDay()
+    // debugger
+    // if(floatNum!==0){
+    let strCal = ''
+    for (let i = 0; i < (floatNum); i++) {
+      strCal += '<li>-</li>'
+    }
+    for (let i = 0; i < 7 - floatNum; i++) {
+      strCal += '<li>' + (i + 1) + '</li>'
+    }
+    $('#c').append('<ul class="cac clear">' + strCal + '</ul>')
+    // }
+    let allDay = 0
+    console.log(intNum())
+    for (let i = 0; i < intNum(); i++) {
+      let strCal = ''
+      for (let n = 0; n < 7; n++) {
+        if (((n + 1) + (i * 7) + (7 - floatNum)) > dayNum) {
+          strCal += '<li>-</li>'
+        } else {
+          strCal += '<li>' + ((n + 1) + (i * 7) + (7 - floatNum)) + '</li>'
+          allDay = ((n + 1) + (i * 7) + (7 - floatNum))
+        }
+      }
+      $('#c').append('<ul class="cac clear">' + strCal + '</ul>')
+    }
+    if (allDay < dayNum) {
+      let strCal = ''
+      for (let i = 0; i < 7; i++) {
+        if ((i + allDay + 1) <= dayNum) {
+          strCal += '<li>' + (i + allDay + 1) + '</li>'
+        } else {
+          strCal += '<li>-</li>'
+        }
+      }
+      $('#c').append('<ul class="cac clear">' + strCal + '</ul>')
+
+    }
+  }
+</script>
+</html>
